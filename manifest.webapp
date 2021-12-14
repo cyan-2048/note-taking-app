@@ -1,0 +1,25 @@
+{
+	"version": "0.0.1",
+	"name": "Notoj",
+	"theme_color": "#f34137",
+	"description": "A simple Notes app for KaiOS.",
+	"launch_path": "/index.html",
+	"icons": {
+		"56": "/css/56.png",
+		"112": "/css/112.png"
+	},
+	"developer": {
+		"name": "Cyan",
+		"url": "https://github.com/cyan-2048/note-taking-app/"
+	},
+	"type": "web",
+	"installs_allowed_from": ["*"],
+	"locales": {
+		"en-US": {
+			"name": "Notoj",
+			"subtitle": "A simple Notes app for KaiOS.",
+			"description": "A note taking app that supports markdown."
+		}
+	},
+	"default_locale": "en"
+}
