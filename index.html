@@ -4,12 +4,30 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Note</title>
+		<meta name="theme-color" content="rgb(255, 255, 255)" />
 		<link rel="stylesheet" href="/css/app.css" />
-		<script src="/js/localforage.min.js"></script>
+		<script src="/js/libs/localforage.min.js"></script>
 		<script src="/js/app.js"></script>
-		<script src="/js/spatial_navigation.js"></script>
+		<script src="/js/files.js"></script>
+		<script src="/js/keydown.js"></script>
+		<script src="/js/snippets.js"></script>
+		<script src="/js/viewer.js"></script>
+		<script src="/js/libs/FileSaver.min.js"></script>
+		<script src="/js/libs/spatial_navigation.js"></script>
 	</head>
 	<body>
+		<div class="roundy"><div id="rundy"></div></div>
 		<div id="home"></div>
+		<div id="iframe_browser">
+			<!-- will only be used in viewing html files -->
+			<iframe></iframe>
+			<!-- will be focused for forwarding keydown events -->
+			<div id="iframe_focus" tabindex="-1"></div>
+		</div>
+		<footer>
+			<div class="softkey-left">Pin</div>
+			<div class="softkey-center">OPEN</div>
+			<div class="softkey-right">Options</div>
+		</footer>
 	</body>
 </html>

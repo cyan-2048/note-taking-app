@@ -41,7 +41,7 @@ html {
 
 .note {
 	box-sizing: border-box;
-	padding: 8px 10px 0px 10px;
+	margin: 0 0 8px 0;
 	transition: background-color ease 0.4s;
 }
 
@@ -49,9 +49,8 @@ html {
 	outline: none;
 }
 
-.note:focus {
-	color: white;
-	padding: 8px 10px 8px 10px;
+.note:focus * {
+	color: white !important;
 }
 
 .note:focus .note_candy[color='blue'] {
@@ -73,10 +72,6 @@ html {
 	background-color: #c4c4c4;
 }
 
-.note:focus + .note {
-	padding: 0px 10px 0px 10px;
-}
-
 .note_candy {
 	position: relative;
 	width: 100%;
@@ -94,12 +89,16 @@ html {
 .note_candy .preview {
 	font-size: 14px;
 	margin-left: 0.5px;
+	color: rgba(0, 0, 0, 0.7);
 }
 
 .note_candy * {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+* {
 	user-select: none;
 }
 
@@ -110,6 +109,132 @@ html {
 }
 
 #home {
+	height: calc(100% - 38px);
+	width: calc(100% - 20px);
+	overflow: auto;
+	position: fixed;
+	top: 8px;
+	left: 10px;
+	border-radius: 6px 6px 0px 0px;
+	z-index: 2;
+}
+
+#iframe_browser {
+	width: 100%;
 	height: calc(100% - 30px);
-	overflow: scroll;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 3;
+	display: none;
+}
+
+@keyframes open {
+	from {
+		transform: translateY(100vh);
+		opacity: 0;
+	}
+	to {
+		transform: none;
+		opacity: 1;
+	}
+}
+
+@keyframes close {
+	from {
+		transform: none;
+		opacity: 1;
+	}
+	to {
+		transform: translateY(100vh);
+		opacity: 0;
+	}
+}
+
+.open {
+	display: block !important;
+	animation: open ease 0.4s forwards;
+}
+.close {
+	display: block !important;
+	animation: close ease 0.4s forwards;
+}
+
+#iframe_browser iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+
+.roundy {
+	position: fixed;
+	z-index: -1;
+	background-color: #f3f3f3;
+	width: 100%;
+	height: 15px;
+	top: 0;
+	left: 0;
+}
+
+.roundy #rundy {
+	position: absolute;
+	z-index: -1;
+	background-color: white;
+	width: 100%;
+	height: 15px;
+	top: 0;
+	left: 0;
+	border-radius: 15px 15px 0px 0px;
+	overflow: hidden;
+}
+
+/* Software Keys */
+
+footer {
+	box-sizing: border-box;
+	padding: 5px;
+	column-gap: 5px;
+	/* grid-gap is an old way of saying column-gap */
+	grid-gap: 5px;
+	display: grid;
+	height: 30px;
+	background: #f3f3f3;
+	color: #323232;
+	z-index: 300;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	border-radius: 7px 7px 0px 0px;
+}
+
+footer * {
+	overflow: hidden;
+	vertical-align: middle;
+	height: 20px;
+}
+
+.softkey-left {
+	font-size: 14px;
+	font-weight: 600;
+	text-align: start;
+}
+
+.softkey-center {
+	font-size: 17px;
+	font-weight: 700;
+	text-align: center;
+}
+
+.softkey-right {
+	font-size: 14px;
+	font-weight: 600;
+	text-align: end;
+}
+
+footer {
+	grid-template-columns: 72px 76px 72px;
+}
+
+footer.icon {
+	grid-template-columns: 98px 24px 98px;
 }

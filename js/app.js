@@ -18,6 +18,8 @@ window.addEventListener('DOMContentLoaded', (e) => {
 		var sn = SpatialNavigation;
 		sn.init();
 		sn.add({ selector: '.note', id: 'notes', rememberSource: true });
+		parseNotes();
+		sn.focus();
 	}
 });
 
@@ -66,37 +68,23 @@ function addNote(n, t, ti, c, cb) {
 			pinned: false,
 			modified: Date.now(),
 		});
+		sortNotes();
 		localforage
 			.setItem('notes', notes)
 			.then(() => (cb && typeof cb === 'function' ? cb() : false))
 			.catch((e) => errorFound(e));
 	}
-	sortNotes();
 	return notes;
 }
 
-function deleteNote(g, cb) {
-	var index = notes.findIndex((p) => p.id == g);
-	if (index != -1) {
-		notes.splice(index, 1);
-	} else {
-		return 'ERROR ID NOT FOUND';
-	}
+function deleteNotes(g, cb) {
+	notes = notes.filter((n) => !g.includes(n.id));
+	sortNotes();
 	localforage
 		.setItem('notes', notes)
 		.then(() => (cb && typeof cb === 'function' ? cb() : false))
 		.catch((e) => errorFound(e));
-	sortNotes();
 	return notes;
-}
-
-function deleteMultiple(arr) {
-	if (arr.length == 0) return;
-	var a = arr;
-	var b = a.shift();
-	deleteNote(b, () => {
-		deleteMultiple(a);
-	});
 }
 
 function sortNotes() {
@@ -122,11 +110,11 @@ function togglePin(g, cb) {
 	} else {
 		return 'ERROR ID NOT FOUND';
 	}
+	sortNotes();
 	localforage
 		.setItem('notes', notes)
 		.then(() => (cb && typeof cb === 'function' ? cb() : false))
 		.catch((e) => errorFound(e));
-	sortNotes();
 	return notes;
 }
 
@@ -141,11 +129,11 @@ function modifyNote(g, n, t, ti, c, cb) {
 	} else {
 		return 'ERROR ID NOT FOUND';
 	}
+	sortNotes();
 	localforage
 		.setItem('notes', notes)
 		.then(() => (cb && typeof cb === 'function' ? cb() : false))
 		.catch((e) => errorFound(e));
-	sortNotes();
 	return notes;
 }
 
@@ -158,7 +146,7 @@ function getNote(g) {
 	}
 }
 
-function parseNotes() {
+function parseNotes(cb) {
 	document.getElementById('home').innerHTML = '';
 	for (let a of notes) {
 		var note = document.createElement('div');
@@ -168,10 +156,7 @@ function parseNotes() {
 
 		var candy = document.createElement('div');
 		candy.className = 'note_candy';
-
-		var color = document.createAttribute('color');
-		color.value = a.color;
-		candy.setAttributeNode(color);
+		candy.setAttribute('color', a.color);
 
 		var title = document.createElement('div');
 		title.className = 'title';
@@ -182,7 +167,11 @@ function parseNotes() {
 		var prev = document.createElement('div');
 		prev.className = 'preview';
 		prev.appendChild(
-			document.createTextNode(decodeURI(a.note).substring(0, 26))
+			document.createTextNode(
+				convertToNiceDate(a.modified) +
+					' · ' +
+					decodeURI(a.note).substring(0, 26)
+			)
 		);
 
 		candy.appendChild(prev);
@@ -197,52 +186,5 @@ function parseNotes() {
 		note.appendChild(candy);
 		document.getElementById('home').appendChild(note);
 	}
+	cb && typeof cb === 'function' ? cb() : false;
 }
-
-function makeid(length) {
-	var result = '';
-	var characters =
-		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	var charactersLength = characters.length;
-	for (var i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * charactersLength));
-	}
-	return result;
-}
-
-function errorFound(g) {
-	console.log(g);
-	alert('an error happened :(');
-}
-
-document.addEventListener('click', (e) => {});
-
-document.addEventListener('keydown', (e) => {
-	var a = document.activeElement;
-	var k = e.key;
-
-	if (a.classList.contains('note') && k == 'Enter') {
-		a.click();
-	}
-});
-
-document.addEventListener('sn:focused', (e) => {
-	console.log(e);
-	var a = e.target;
-
-	function scrollActive() {
-		const rect = document.activeElement.getBoundingClientRect();
-		const elY =
-			rect.top - document.body.getBoundingClientRect().top + rect.height / 2;
-
-		document.activeElement.parentNode.scrollBy({
-			left: 0,
-			top: elY - window.innerHeight / 2,
-			behavior: 'smooth',
-		});
-	}
-
-	if (a.classList.contains('note')) {
-		scrollActive();
-	}
-});
